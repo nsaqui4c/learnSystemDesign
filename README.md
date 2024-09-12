@@ -32,3 +32,21 @@ There are two types of DB
 |Ideal for applications requiring reliable transactions (like banking or financial systems).| Transactions are often less strict and optimized for scalability rather than consistency.|
 | Performance | |
 | Great for structured data and when transactions are critical. May slow down as data grows if not properly optimized. | Optimized for high throughput and large amounts of unstructured or semi-structured data. Generally performs better for read-heavy and write-heavy workloads at scale. |
+
+
+
+### Sharding
+ Database partioning into smaller, faster and more easily manged part.
+* Sharding Technique
+  * Horizontal partitioning      -> range based partitioning   -> We store data according user ID-> first partition will have user 1-100, then 101-200 and so on.
+  * Vertical partitioning        -> feature based partitioning -> DB for userProfile, DB for friend list, DB for images
+  * Directory based partitioning -> create a directory server which will have mapping of data and its DB-> first lookup directory to find the DB and then lookup data in that DB
+    * most commonly used.
+    * We can add more DB easily, as we can update directory server
+  * Hashed Based partition       -> we generate a hash function and accordingly decide, in which DB to save data.
+     * hash function is tightly coupled with number of DB
+     * If DB increase or decrease we need to change function.
+   
+Problem :
+1) Joins and Denormalization are difficult
+2) Rebalancing in case on DB is highly utilized, because of incorrect sharding criteria
