@@ -21,7 +21,7 @@ There are two types of DB
 
 | SQL | NOSQL |
 | :---:  | :---: |
-| Data Structure| |
+| <span style="color:red">Data Structure</span>| |
 | Data is stored in tables with predefined schemas. | Data is stored in various formats such as documents, key-value pairs, wide-column stores, or graphs. |
 | Each row must conform to the structure defined by the schema. | Schema is often flexible or schema-less, meaning the structure of data can vary from one record to another. |
 | Scalability| |
