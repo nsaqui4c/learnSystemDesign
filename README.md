@@ -40,14 +40,17 @@ There are two types of DB
 
 * Your data is structured and can fit into predefined schemas (tables with rows and columns).
 * Example: Financial systems, inventory management, and enterprise resource planning (ERP).
+  
 **ACID Transactions:**
 
 * You need strict consistency, and transactions are crucial.
 * Example: Banking systems, order management, and any application where data integrity is critical.
+  
 **Complex Queries:**
 
 * Your application requires complex joins, aggregations, and subqueries.
 * Example: Data analytics platforms, reporting systems.
+  
 **Long-term Consistency:**
 
 * If consistency is more important than availability, especially in smaller systems where scalability is not the top priority.
@@ -57,18 +60,22 @@ There are two types of DB
 
 * Your data doesn’t fit well into tables (e.g., documents, JSON, multimedia).
 * Example: Content management systems, document storage, real-time web apps.
+  
 **High Scalability:**
 
 * You need to scale horizontally to handle massive amounts of data across distributed systems.
 * Example: Big data applications, social media platforms, IoT data storage.
+  
 **Flexible Schema:**
 
 * Your data structure is constantly evolving, and you need the ability to quickly adjust the schema.
 * Example: Startups or fast-growing apps that require agility in development.
+  
 **Eventual Consistency:**
 
 * If your system can tolerate eventual consistency, NoSQL databases can offer high availability.
 * Example: Social media feeds, recommendation engines, real-time analytics, or any application where speed is prioritized over strong consistency.
+  
 **Summary:**
 * Use SQL for structured data, complex transactions, and applications needing ACID compliance.
 * Use NoSQL for large-scale, distributed systems with flexible schema, unstructured data, or where high availability and horizontal scalability are more important than strict consistency.
