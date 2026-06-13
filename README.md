@@ -1,5 +1,128 @@
 # System Design
 
+## SOLID Principle
+| Principle | Goal                     |
+| --------- | ------------------------ |
+| SRP       | One responsibility       |
+| OCP       | Extend without modifying |
+| LSP       | Child can replace parent |
+| ISP       | Small focused interfaces |
+| DIP       | Depend on abstractions   |
+
+### Coupling vs Cohesion
+* Tight couple  - database connection is created inside the class. Had to rewrite the class, if need to add different DB.
+```
+class OrderService {
+  constructor() {
+    this.db = new MySQLDatabase();
+  }
+}
+```
+
+* Loose coupling - Db connection is passed as argument. If changed, we can change it in one place and pass the same db everywhere
+
+```
+class OrderService {
+  constructor(database) {
+    this.db = database;
+  }
+}
+```
+
+* Low cohesion - Measures how closely related responsibilities are.
+Below we are using utility class with all the utility in one place. This class does not have cohesion as unrelated things are present in here
+```
+class Utility {
+  calculateTax() {}
+  sendEmail() {}
+  generatePdf() {}
+}
+```
+* High cohesion 
+```
+class TaxCalculator {}
+class EmailService {}
+class PdfService {}
+```
+**What is good design?**
+Low coupling
+High cohesion
+
+### Composition vs Inheritance
+* Inheritance
+Represents "IS-A" relationship.
+```
+class Animal {
+  eat() {}
+}
+```
+class Dog extends Animal {}
+Dog IS-A Animal.
+
+Problems
+
+Deep inheritance chains become difficult.
+```
+Animal
+  -> Mammal
+      -> Dog
+          -> PoliceDog
+```
+Changes ripple everywhere.
+
+
+* Composition
+
+Represents "HAS-A" relationship.
+```
+class Engine {
+  start() {}
+}
+
+class Car {
+  constructor() {
+    this.engine = new Engine();
+  }
+}
+```
+Car HAS-A Engine.
+Why Composition Is Preferred
+
+Instead of:
+class FlyingCar extends Car {}
+Use:
+```
+class FlyBehavior {
+  fly() {}
+}
+
+class Car {
+  constructor(flyBehavior) {
+    this.flyBehavior = flyBehavior;
+  }
+}
+```
+Can change behavior dynamically.
+
+**Famous Interview Question**
+
+Inheritance or Composition?
+
+Answer:
+```
+Favor Composition Over Inheritance
+
+This is one of the core principles behind many design patterns.
+
+Patterns using composition:
+
+Strategy
+Decorator
+Adapter
+Bridge
+```
+
+
 ### Database
 There are two types of DB
 * SQL      ->
