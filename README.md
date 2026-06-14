@@ -85,15 +85,12 @@ class UserService {
 }
 ```
 Now UserService doesn't care whether it's Mongo or Postgres.
-
+```
 new UserService(new MongoStorage());
-
 or
-
 new UserService(new PostgresStorage());
-
-Both work.
-LSP satisfied.
+```
+Both work. LSP satisfied.
 
 * Interface Segregation Principle - Clients should not depend on methods they don't use.
   * should not create interface with function which classes do need to always use, causing unneccessary creating of the function
@@ -214,6 +211,131 @@ Decorator
 Adapter
 Bridge
 ```
+
+## Design Pattern
+
+| Pattern                 | Type       | Purpose                                        | Real-World Example                 | Pros                        | Cons                       | Use When                            |
+| ----------------------- | ---------- | ---------------------------------------------- | ---------------------------------- | --------------------------- | -------------------------- | ----------------------------------- |
+| Singleton               | Creational | Ensure only one instance exists                | Logger, Config Manager, DB Pool    | Saves memory, Global access | Hard to test, Global state | Need exactly one shared object      |
+| Factory Method          | Creational | Create objects without exposing creation logic | Payment Gateway Factory            | Loose coupling, Extensible  | More classes               | Object type determined at runtime   |
+| Abstract Factory        | Creational | Create families of related objects             | Windows/Mac UI Components          | Consistent product families | Complex structure          | Multiple related object groups      |
+| Builder                 | Creational | Construct complex objects step-by-step         | Query Builder, Burger Builder      | Readable, Flexible          | Extra code                 | Many optional parameters            |
+| Prototype               | Creational | Clone existing objects                         | Game Characters, Templates         | Fast object creation        | Deep copy challenges       | Object creation is expensive        |
+| Adapter                 | Structural | Convert one interface into another             | Stripe Adapter, Legacy API Adapter | Reuse existing code         | Additional layer           | Integrating incompatible systems    |
+| Facade                  | Structural | Simplify a complex subsystem                   | Order Service Facade               | Easy to use                 | Can become God Object      | Hide subsystem complexity           |
+| Proxy                   | Structural | Control access to an object                    | Cache Proxy, API Proxy             | Security, Lazy Loading      | Additional complexity      | Need access control or caching      |
+| Decorator               | Structural | Add behavior dynamically                       | Express Middleware, Logging        | Flexible extension          | Many wrapper objects       | Avoid inheritance explosion         |
+| Composite               | Structural | Treat individual and grouped objects uniformly | Folder/File Tree                   | Recursive structure support | Hard validation            | Tree-like structures                |
+| Bridge                  | Structural | Separate abstraction from implementation       | Remote Control & TV                | Independent evolution       | More abstraction           | Multiple dimensions of change       |
+| Flyweight               | Structural | Share common state to save memory              | Text Editor Characters             | Memory efficient            | Complex management         | Large number of similar objects     |
+| Observer                | Behavioral | Notify multiple subscribers                    | Kafka, EventEmitter, React Events  | Loose coupling              | Debugging complexity       | Event-driven systems                |
+| Strategy                | Behavioral | Switch algorithms dynamically                  | Payment Methods, Sorting           | Open/Closed Principle       | More classes               | Multiple interchangeable algorithms |
+| State                   | Behavioral | Change behavior based on state                 | Order Lifecycle                    | Removes large conditionals  | Many state classes         | State-dependent behavior            |
+| Command                 | Behavioral | Encapsulate requests as objects                | Queue Jobs, Kafka Commands         | Undo, Queueing              | Many command classes       | Need action abstraction             |
+| Chain of Responsibility | Behavioral | Pass request through handlers                  | Express Middleware                 | Flexible processing chain   | Hard debugging             | Multiple processing steps           |
+| Template Method         | Behavioral | Define algorithm skeleton                      | Report Generator                   | Reuse common workflow       | Inheritance dependency     | Workflow is fixed but steps vary    |
+| Mediator                | Behavioral | Centralize communication                       | Chat Server, Air Traffic Control   | Reduces coupling            | Mediator may become large  | Many objects communicate            |
+| Memento                 | Behavioral | Save and restore object state                  | Undo/Redo                          | Easy rollback               | Memory consumption         | Need history snapshots              |
+| Iterator                | Behavioral | Traverse collections uniformly                 | Array Iterators                    | Simplifies traversal        | Extra abstraction          | Custom collections                  |
+| Visitor                 | Behavioral | Add operations without modifying classes       | AST Processing, Compiler           | Easy extension              | Difficult to understand    | Stable object structure             |
+| Interpreter             | Behavioral | Define grammar and evaluate expressions        | SQL Parser, Regex Engine           | Easy grammar extension      | Performance overhead       | Domain-specific languages           |
+
+### Pattern selection cheat sheet
+| Problem                                     | Pattern                 |
+| ------------------------------------------- | ----------------------- |
+| Need only one object                        | Singleton               |
+| Need object creation logic hidden           | Factory                 |
+| Need complex object construction            | Builder                 |
+| Need multiple related object families       | Abstract Factory        |
+| Need to clone objects                       | Prototype               |
+| Need to integrate incompatible APIs         | Adapter                 |
+| Need a simplified API                       | Facade                  |
+| Need access control or caching              | Proxy                   |
+| Need to add features dynamically            | Decorator               |
+| Need tree structures                        | Composite               |
+| Need event notifications                    | Observer                |
+| Need interchangeable algorithms             | Strategy                |
+| Need state-driven behavior                  | State                   |
+| Need request queueing/undo                  | Command                 |
+| Need request pipeline                       | Chain of Responsibility |
+| Need fixed workflow with customizable steps | Template Method         |
+| Need centralized communication              | Mediator                |
+| Need undo/redo                              | Memento                 |
+| Need custom traversal                       | Iterator                |
+| Need new operations on stable classes       | Visitor                 |
+
+
+### Nodejs example of desugn pattern
+| Technology                  | Design Pattern          |
+| --------------------------- | ----------------------- |
+| Express Middleware          | Chain of Responsibility |
+| EventEmitter                | Observer                |
+| Passport Authentication     | Strategy                |
+| Mongoose Models             | Factory                 |
+| Winston Logger              | Singleton               |
+| Redis Cache Layer           | Proxy                   |
+| API Gateway                 | Facade                  |
+| BullMQ Jobs                 | Command                 |
+| Kafka Consumers             | Observer + Command      |
+| Socket.IO Events            | Observer                |
+| NestJS Dependency Injection | Factory + Singleton     |
+| React Context               | Observer                |
+| React Hooks Composition     | Decorator/Composition   |
+| Redux Reducers              | State Pattern Concepts  |
+
+
+
+
+| Priority | Pattern                 | Typical Interview Example      |
+| -------- | ----------------------- | ------------------------------ |
+| ⭐⭐⭐⭐⭐    | Singleton               | Spring Bean Scope, Logger      |
+| ⭐⭐⭐⭐⭐    | Factory                 | Payment Gateway Factory        |
+| ⭐⭐⭐⭐⭐    | Builder                 | Query Builder, Request Builder |
+| ⭐⭐⭐⭐⭐    | Strategy                | Multiple Payment Methods       |
+| ⭐⭐⭐⭐⭐    | Observer                | Kafka, EventEmitter            |
+| ⭐⭐⭐⭐     | State                   | Order Status Workflow          |
+| ⭐⭐⭐⭐     | Command                 | Task Queue, Job Processing     |
+| ⭐⭐⭐⭐     | Chain of Responsibility | Express Middleware             |
+| ⭐⭐⭐⭐     | Adapter                 | Third-Party Integration        |
+| ⭐⭐⭐⭐     | Facade                  | Service Aggregator             |
+| ⭐⭐⭐⭐     | Proxy                   | Cache Layer                    |
+| ⭐⭐⭐⭐     | Decorator               | Middleware, Logging            |
+| ⭐⭐⭐      | Composite               | Menu Tree                      |
+| ⭐⭐⭐      | Template Method         | Report Generator               |
+| ⭐⭐⭐      | Abstract Factory        | Cross-Platform UI              |
+
+
+
+## Creational Design Patterns
+### Singleton
+### Factory
+### Builder Pattern
+### Prototype Pattern
+### Abstract Factory Pattern
+
+
+
+## Structural Design Patterns
+### Adapter
+### Facade
+### Decorator
+### Composite
+### Proxy
+
+
+
+## Behavioral Design Patterns
+### Observer
+### Strategy
+### Command
+### State
+### Chain of Responsibility
+### Template Method
+### Mediator
+### Memento
+### Iterator
+### Visitor
+
 
 
 ### Database
