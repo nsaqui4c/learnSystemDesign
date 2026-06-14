@@ -9,6 +9,98 @@
 | ISP       | Small focused interfaces |
 | DIP       | Depend on abstractions   |
 
+* Single responsibility principle -
+* Open close principle -> open for extension and close fro modification
+  * Express allow us to entend the functionality without changing the code
+  ```
+  app.use(authMiddleware);
+  app.use(loggerMiddleware);
+  ```
+```
+class Express {
+  constructor() {
+    this.middlewares = [];
+  }
+
+  use(middleware) {
+    this.middlewares.push(middleware);
+  }
+}
+
+When you do:
+
+app.use(authMiddleware);
+app.use(loggerMiddleware);
+
+Internal state becomes:
+
+middlewares = [
+  authMiddleware,
+  loggerMiddleware
+];
+
+
+--------------------------
+
+handleRequest(req, res) {
+  let index = 0;
+
+  const next = () => {
+    const middleware = this.middlewares[index++];
+
+    if (!middleware) {
+      return;
+    }
+
+    middleware(req, res, next);
+  };
+
+  next();
+}
+```
+* Liskov Substitution Principle - If code works with a parent type, it should work correctly with any child type without knowing which child it received.
+  * If I replace Parent with Child will my application still behave correctly?
+Contract:
+```
+class Storage {
+  save(data) {}
+  find(id) {}
+}
+```
+Implementations:
+```
+class MongoStorage extends Storage {}
+class PostgresStorage extends Storage {}
+```
+Service:
+```
+class UserService {
+  constructor(storage) {
+    this.storage = storage;
+  }
+
+  create(user) {
+    this.storage.save(user);
+  }
+}
+```
+Now UserService doesn't care whether it's Mongo or Postgres.
+
+new UserService(new MongoStorage());
+
+or
+
+new UserService(new PostgresStorage());
+
+Both work.
+LSP satisfied.
+
+* Interface Segregation Principle - Clients should not depend on methods they don't use.
+  * should not create interface with function which classes do need to always use, causing unneccessary creating of the function
+* Dependency Inversion Principle - do not create object inside the class, rather get the object as an argument.
+  * also can be explain as be loose coupled.
+
+
 ### Coupling vs Cohesion
 * Tight couple  - database connection is created inside the class. Had to rewrite the class, if need to add different DB.
 ```
@@ -18,6 +110,7 @@ class OrderService {
   }
 }
 ```
+
 
 * Loose coupling - Db connection is passed as argument. If changed, we can change it in one place and pass the same db everywhere
 
