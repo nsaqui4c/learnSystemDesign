@@ -308,9 +308,246 @@ Bridge
 
 ## Creational Design Patterns
 ### Singleton
+* Ensures exactly one instance exists.
+ ```
+class Singleton {
+  constructor() {
+    if (Singleton.instance) {
+      return Singleton.instance;
+    }
+
+    Singleton.instance = this;
+  }
+}
+
+const a = new Singleton();
+const b = new Singleton();
+
+console.log(a === b);
+ ```
+
 ### Factory
+* Creates objects without exposing creation logic.
+* create a single reusebale function to return object of diffrent class depends on argument pass
+```
+  class Car {}
+
+class Bike {}
+
+class VehicleFactory {
+  static create(type) {
+    switch (type) {
+      case "car":
+        return new Car();
+
+      case "bike":
+        return new Bike();
+
+      default:
+        throw Error("Unknown vehicle");
+    }
+  }
+}
+  ```
+  ```
+const vehicle = VehicleFactory.create("car");
+  ```
+* realworld example
+ ```
+createConnection("mysql")
+createConnection("mongodb")
+paymentFactory.create("stripe")
+paymentFactory.create("paypal")
+ ```
 ### Builder Pattern
+**Problem Hard to remember parameter order, Optional fields become messy, Constructor explosion**
+```
+class Car {
+  constructor(
+    engine,
+    color,
+    sunroof,
+    gps,
+    automaticTransmission,
+    sportsPackage
+  ) {
+    this.engine = engine;
+    this.color = color;
+    this.sunroof = sunroof;
+    this.gps = gps;
+    this.automaticTransmission = automaticTransmission;
+    this.sportsPackage = sportsPackage;
+  }
+}
+
+const car = new Car(  "V8",  "Red",  true,  true,  false,  true);
+```
+**Solution**
+* create a builder class that will create car object and return the Car class
+Car class
+```
+class Car {
+  constructor(builder) {
+    this.engine = builder.engine;
+    this.color = builder.color;
+    this.gps = builder.gps;
+    this.sunroof = builder.sunroof;
+  }
+}
+```
+Builder class
+```
+class CarBuilder {
+  setEngine(engine) {
+    this.engine = engine;
+    return this;
+  }
+
+  setColor(color) {
+    this.color = color;
+    return this;
+  }
+
+  setGPS(gps) {
+    this.gps = gps;
+    return this;
+  }
+
+  setSunroof(sunroof) {
+    this.sunroof = sunroof;
+    return this;
+  }
+
+  build() {
+    return new Car(this);
+  }
+}
+```
+Usage
+```
+const car = new CarBuilder()
+  .setEngine("V8")
+  .setColor("Red")
+  .setGPS(true)
+  .build();
+
+console.log(car);
+```
+**Director (Optional)**
+Director knows predefined configurations.
+```
+class CarDirector {
+  static buildSportsCar() {
+    return new CarBuilder()
+      .setEngine("V12")
+      .setGPS(true)
+      .setSunroof(true)
+      .build();
+  }
+}
+```
+```
+Advantages
+
+Readable
+Flexible
+Immutable objects possible
+Eliminates constructor overloads
+
+Disadvantages
+
+More classes
+Overkill for simple objects
+
+Interview Question
+When should Builder be used?
+
+When:
+
+Many optional fields exist
+Constructor has too many parameters
+Object creation requires multiple steps
+```
 ### Prototype Pattern
+**Suppose creating an object is expensive.**
+
+```js
+const employee = loadEmployeeFromDatabase();
+```
+**Solution - Create new objects by cloning existing ones.**
+```
+class Car {
+  constructor(engine, color) {
+    this.engine = engine;
+    this.color = color;
+  }
+
+  clone() {
+    return new Car(
+      this.engine,
+      this.color
+    );
+  }
+}
+```
+```
+const original = new Car(
+  "V8",
+  "Black"
+);
+
+const clone = original.clone();
+
+clone.color = "Red";
+
+console.log(original);
+console.log(clone);
+```
+
+```
+class VehicleRegistry {
+  constructor() {
+    this.vehicles = {};
+  }
+
+  add(name, vehicle) {
+    this.vehicles[name] = vehicle;
+  }
+
+  get(name) {
+    return this.vehicles[name].clone();
+  }
+}
+```
+```
+registry.add(
+  "sports",
+  new Car("V12", "Red")
+);
+
+const car1 = registry.get("sports");
+const car2 = registry.get("sports");
+```
+
+**Advantages**
+
+Fast object creation
+Avoid expensive initialization
+Reduces database calls
+
+**Disadvantages**
+
+Deep cloning can be tricky
+Circular references
+
+**Interview Question**
+Builder vs Prototype
+Builder creates object step-by-step.
+Prototype copies existing object.
+
+Builder   → Construct
+Prototype → Clone
+
 ### Abstract Factory Pattern
 
 
