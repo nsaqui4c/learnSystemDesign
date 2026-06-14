@@ -549,9 +549,122 @@ Builder   → Construct
 Prototype → Clone
 
 ### Abstract Factory Pattern
+* Factory creates ONE object.
+* Abstract Factory creates RELATED objects.
+```
+Factory:
+  Creates Button
+
+Abstract Factory:
+  Creates Button
+  Creates Checkbox
+  Creates TextBox
+```
+Example
+Button
+ ```
+class WindowsButton {
+  render() {
+    console.log("Windows Button");
+  }
+}
+
+class MacButton {
+  render() {
+    console.log("Mac Button");
+  }
+}
+Checkbox
+class WindowsCheckbox {
+  render() {
+    console.log("Windows Checkbox");
+  }
+}
+
+class MacCheckbox {
+  render() {
+    console.log("Mac Checkbox");
+  }
+}
+ ```
+Abstract Factory
+ ```
+class UIFactory {
+  createButton() {}
+  createCheckbox() {}
+}
+ ```
+Concrete Factories
+ ```
+class WindowsFactory extends UIFactory {
+  createButton() {
+    return new WindowsButton();
+  }
+
+  createCheckbox() {
+    return new WindowsCheckbox();
+  }
+}
+class MacFactory extends UIFactory {
+  createButton() {
+    return new MacButton();
+  }
+
+  createCheckbox() {
+    return new MacCheckbox();
+  }
+}
+ ```
+Client
+ ```
+function renderUI(factory) {
+  const button = factory.createButton();
+  const checkbox = factory.createCheckbox();
+
+  button.render();
+  checkbox.render();
+}
+ ```
+Usage:
+ ```
+renderUI(new WindowsFactory());
+ ```
+
+**Factory Method vs Abstract Factory**
 
 
+Factory Method
 
+Creates ONE product.
+```
+createButton()
+```
+Abstract Factory
+
+Creates FAMILY of products.
+```
+createButton()
+createCheckbox()
+createTextbox()
+```
+Advantages
+
+Loose coupling
+Consistent product families
+Easy platform switching
+
+Disadvantages
+
+More classes
+Harder to add new product types
+
+Example:
+
+Adding:
+
+Slider
+
+Requires modifying all factories.
 ## Structural Design Patterns
 ### Adapter
 ### Facade
