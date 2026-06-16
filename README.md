@@ -1170,13 +1170,13 @@ Bank Account
 ```
 **Types of Proxy**
 
-Virtual Proxy
+* Virtual Proxy
  - Lazy loading.
-Protection Proxy
+* Protection Proxy
  - Authorization.
-Remote Proxy
+* Remote Proxy
  - Remote service access.
-Cache Proxy
+* Cache Proxy
  - Cache results.
 
 
