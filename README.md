@@ -666,11 +666,622 @@ Slider
 
 Requires modifying all factories.
 ## Structural Design Patterns
+```
+Structural patterns answer:
+
+"How do we compose classes and objects to form larger structures while keeping the system flexible?"
+
+Think of them as connectors and wrappers between existing objects.
+```
+| Pattern   | Main Goal                            | Real World Example              |
+| --------- | ------------------------------------ | ------------------------------- |
+| Adapter   | Convert one interface to another     | Power plug adapter              |
+| Facade    | Simplify complex subsystem           | Restaurant waiter               |
+| Decorator | Add behavior dynamically             | Coffee toppings                 |
+| Composite | Treat group and individual uniformly | File Explorer                   |
+| Proxy     | Control access to object             | ATM card accessing bank account |
+
+
+Adapter   = Translator
+Facade    = Receptionist
+Decorator = Gift Wrapper
+Composite = Tree Structure
+Proxy     = Security Guard
+
+**Top 15 Structural Design Pattern Interview Questions**
+Easy
+```
+What are Structural Design Patterns?
+Adapter vs Facade?
+Decorator vs Inheritance?
+Composite Pattern use cases?
+What problem does Proxy solve?
+Explain Facade with real example.
+Explain Adapter with payment gateway example.
+```
+Medium
+```
+How does Express middleware relate to Decorator?
+How is API Gateway a Proxy?
+Why does Composite fit file systems?
+How would you wrap a third-party API using Adapter?
+How would you implement caching using Proxy?
+```
+Advanced
+```
+Design a payment system supporting Stripe, PayPal, Razorpay using Adapter.
+Design an e-commerce checkout using Facade.
+Design a logging/authentication system using Decorator and middleware chaining.
+```
+
 ### Adapter
+Problem
+
+Your application expects:
+```
+payment.process(amount);
+```
+But third-party SDK provides:
+```
+oldPayment.pay(amount);
+```
+You cannot modify third-party code.
+
+Solution
+
+Create an adapter.
+```
+class OldPayment {
+  pay(amount) {
+    console.log(`Paid ${amount}`);
+  }
+}
+
+class PaymentAdapter {
+  constructor(oldPayment) {
+    this.oldPayment = oldPayment;
+  }
+
+  process(amount) {
+    this.oldPayment.pay(amount);
+  }
+}
+```
+Usage:
+```
+const payment = new PaymentAdapter(
+  new OldPayment()
+);
+
+payment.process(100);
+```
+```
+Structure
+Client
+  |
+  v
+Adapter
+  |
+  v
+Adaptee (Old System)
+```
+**Real-World Uses**
+Payment Gateway Migration
+```
+Old:
+
+stripe.charge()
+
+New App Expects:
+
+payment.process()
+```
+Adapter bridges both.
+
+* Database Drivers
+
+Different databases expose different APIs.
+```
+mysql.query()
+mongodb.find()
+```
+Adapter provides:
+```
+db.execute()
+```
+* External APIs
+
+Different shipping providers:
+```
+fedex.ship()
+dhl.createShipment()
+ups.send()
+```
+
+Unified adapter:
+```
+shipping.ship()
+```
+Pros
+
+Reuse legacy code
+Integrate third-party systems
+Decouples client from implementation
+
+Cons
+
+Additional abstraction
+Too many adapters can increase complexity
+
 ### Facade
+Intent
+```
+Provide a simple interface to a complex subsystem.
+```
+Real Life Example
+
+Restaurant.
+You don't talk to:
+```
+Chef
+Cashier
+Cleaner
+Inventory manager
+```
+You talk to:
+```
+Waiter
+```
+The waiter is the Facade.
+
+**Create Facade.**
+```
+class OrderFacade {
+  placeOrder(order) {
+    inventory.check(order);
+    payment.process(order);
+    shipping.dispatch(order);
+    notification.send(order);
+  }
+}
+```
+Usage:
+```
+orderFacade.placeOrder(order);
+```
+```
+Structure
+
+Client
+   |
+Facade
+   |
+---------------------
+|   |   |   |       |
+Inventory Payment Shipping Notification
+```
+
+Pros
+Easy to use
+Hides complexity
+Reduces coupling
+
+Cons
+
+Can become God Object
+Too much logic may accumulate
+
+
+```
+Q1: Is Facade a wrapper?
+
+Yes.
+
+But it simplifies multiple subsystems.
+```
+| Facade              | Adapter               |
+| ------------------- | --------------------- |
+| Simplifies          | Converts              |
+| Same functionality  | Different interface   |
+| Multiple subsystems | Usually one subsystem |
+
+
 ### Decorator
+Intent
+ * Add behavior dynamically without modifying original class.
+
+Real Life Example
+
+Coffee shop.
+```
+Base coffee:
+
+Coffee = $10
+
+Add milk:
+
+Coffee + Milk = $12
+
+Add sugar:
+
+Coffee + Milk + Sugar = $13
+```
+Object gets wrapped repeatedly.
+
+Problem
+
+Without Decorator:
+```
+Coffee
+MilkCoffee
+SugarCoffee
+MilkSugarCoffee
+MilkSugarChocolateCoffee
+```
+Class explosion.
+
+Solution
+```
+class Coffee {
+  cost() {
+    return 10;
+  }
+}
+
+class MilkDecorator {
+  constructor(coffee) {
+    this.coffee = coffee;
+  }
+
+  cost() {
+    return this.coffee.cost() + 2;
+  }
+}
+```
+Usage:
+```
+let coffee = new Coffee();
+
+coffee = new MilkDecorator(coffee);
+
+console.log(coffee.cost());
+```
+```
+Structure
+Coffee
+  |
+MilkDecorator
+  |
+SugarDecorator
+  |
+ChocolateDecorator
+```
+**Express Middleware = Decorator**
+
+Most important interview example.
+```
+app.use(logger);
+app.use(auth);
+app.use(rateLimit);
+```
+
+Request becomes:
+```
+Request
+  |
+Logger
+  |
+Auth
+  |
+RateLimit
+  |
+Controller
+```
+Each middleware adds behavior.
+
+Logging Example
+```
+class Service {
+  execute() {
+    console.log("business logic");
+  }
+}
+
+class LoggingDecorator {
+  constructor(service) {
+    this.service = service;
+  }
+
+  execute() {
+    console.log("start");
+    this.service.execute();
+    console.log("end");
+  }
+}
+```
+Pros
+
+Runtime flexibility
+Open/Closed Principle
+Avoids inheritance explosion
+
+Cons
+
+Many wrapper objects
+Debugging chain can be difficult
+
+**Interview Question**
+Q1: Decorator vs Inheritance?
+```
+Decorator:
+
+object wrapped dynamically
+
+Inheritance:
+
+behavior fixed at compile/design time
+```
+Decorator is more flexible.
+
+Q2: Middleware uses which pattern?
+
+Mostly:
+Decorator
+Chain of Responsibility
+
+Q3: Why Decorator is better?
+
+* Avoids:
+ * AdminUser
+ * PremiumAdminUser
+ * PremiumAdminWithDiscountUser
+
+* Class explosion.
 ### Composite
+Intent
+ * Treat individual objects and groups uniformly.
+
+Real Life Example
+
+File Explorer.
+```
+Folder
+ ├── File
+ ├── File
+ └── Folder
+```
+User can:
+```
+folder.show();
+file.show();
+```
+same interface.
+
+Structure
+```
+Component
+   |
+------------
+|          |
+Leaf   Composite
+(File)  (Folder)
+```
+Example
+```
+class File {
+  constructor(name) {
+    this.name = name;
+  }
+
+  display() {
+    console.log(this.name);
+  }
+}
+
+class Folder {
+  constructor(name) {
+    this.name = name;
+    this.children = [];
+  }
+
+  add(child) {
+    this.children.push(child);
+  }
+
+  display() {
+    console.log(this.name);
+
+    this.children.forEach(child =>
+      child.display()
+    );
+  }
+}
+```
+**Real-World Examples**
+React Component Tree
+```
+App
+ ├ Header
+ ├ Sidebar
+ └ Content
+```
+All are components.
+
+Organization Structure
+```
+CEO
+ ├ Manager
+ │   ├ Employee
+ │   └ Employee
+```
+
+Menus
+
+```
+Menu
+ ├ Item
+ ├ Item
+ └ Submenu
+```
+Pros
+
+Recursive structures
+Uniform operations
+Easy traversal
+
+Cons
+
+Difficult validation rules
+Can over-generalize design
+
+**Interview Questions**
+Q1: Best example?
+
+File system.
+
+Q2: React tree uses Composite?
+
+Yes.
+
+Components contain components recursively.
+
+Q3: Composite vs Decorator?
+
+Composite:
+ - part-whole hierarchy
+
+Decorator:
+ - adds behavior
 ### Proxy
+Intent
+Provide a placeholder or surrogate object that controls access to another object.
+
+Real Life Example
+```
+ATM Card.
+```
+You don't access bank account directly.
+```
+User
+  |
+ATM Card (Proxy)
+  |
+Bank Account
+```
+**Types of Proxy**
+
+Virtual Proxy
+ - Lazy loading.
+Protection Proxy
+ - Authorization.
+Remote Proxy
+ - Remote service access.
+Cache Proxy
+ - Cache results.
+
+
+Lazy Loading Example
+```
+class RealImage {
+  load() {
+    console.log("Loading huge image...");
+  }
+}
+
+class ImageProxy {
+  constructor() {
+    this.realImage = null;
+  }
+
+  load() {
+    if (!this.realImage) {
+      this.realImage = new RealImage();
+    }
+
+    this.realImage.load();
+  }
+}
+```
+Cache Proxy Example
+```
+class UserApi {
+  async getUser(id) {
+    console.log("DB Hit");
+    return { id };
+  }
+}
+
+class CacheProxy {
+  constructor(api) {
+    this.api = api;
+    this.cache = new Map();
+  }
+
+  async getUser(id) {
+    if (this.cache.has(id)) {
+      return this.cache.get(id);
+    }
+
+    const user = await this.api.getUser(id);
+
+    this.cache.set(id, user);
+
+    return user;
+  }
+}
+```
+Real-World Examples
+Redis Cache Layer
+```
+Client
+  |
+Cache Proxy
+  |
+Database
+```
+API Gateway
+```
+Client
+  |
+Gateway
+  |
+Microservices
+```
+Gateway acts like Proxy.
+
+Authentication
+```
+if(user.isAuthorized())
+```
+before accessing service.
+
+Pros
+
+Security
+Caching
+Lazy loading
+Access control
+
+Cons
+
+Additional complexity
+More objects
+
+**Interview Questions**
+Q1: Proxy vs Facade?
+| Proxy            | Facade                         |
+| ---------------- | ------------------------------ |
+| Controls access  | Simplifies usage               |
+| Same interface   | Different simplified interface |
+| Security/Caching | Usability                      |
+
+Q2: Redis cache layer is which pattern?
+
+Proxy.
+
+Q3: API Gateway resembles?
+
+Proxy pattern.
 
 
 
